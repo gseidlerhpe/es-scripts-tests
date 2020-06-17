@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-example-service-http
+spec:
+  selector:
+    run: hello-world-example
+  ports:
+  - name: http-dashboard
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-10000pods
+spec:
+  selector:
+    matchLabels:
+      run: hello-world-example
+  replicas: 10000
+  template:
+    metadata:
+      labels:
+        run: hello-world-example
+    spec:
+      containers:
+        - name: hello-world
+          image: gcr.io/google-samples/node-hello:1.0
+          resources: 
+            requests: 
+              memory: "10Mi"
+              cpu: "10m"
+            limits: 
+              memory: "10Mi"
+              cpu: "10m"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
